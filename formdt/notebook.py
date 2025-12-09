@@ -13,28 +13,28 @@ def format_notebook(
 ) -> dict:
     with open(path) as f:
         notebook = json.load(f)
-    
+
     for i, cell in enumerate(notebook.get("cells", [])):
         if cell.get("cell_type") != "markdown":
             continue
-        
+
         if cells is not None and i not in cells:
             continue
-        
+
         if not all_markdown and cells is None:
             continue
-        
+
         source = cell.get("source", [])
         if isinstance(source, list):
             text = "".join(source)
         else:
             text = source
-        
+
         formatted = format_markdown(text, config)
         cell["source"] = formatted.splitlines(keepends=True)
         if cell["source"] and not cell["source"][-1].endswith("\n"):
             pass
-    
+
     return notebook
 
 

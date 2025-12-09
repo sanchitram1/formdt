@@ -23,6 +23,24 @@ formdt README.md --write
 formdt README.md --line-length 120
 ```
 
+### Jupyter Notebooks
+
+```bash
+# Format all markdown cells
+formdt notebook.ipynb -m -w
+
+# Format specific cells (0-indexed)
+formdt notebook.ipynb -c "0,2,5" -w
+
+# Format a range of cells
+formdt notebook.ipynb -c "1-3,7" -w
+
+# Preview without writing
+formdt notebook.ipynb -m -l 65
+```
+
+**Note:** You must specify either `-m` (all markdown cells) or `-c` (specific cells) when formatting notebooks.
+
 ### Library
 
 ```python
@@ -49,6 +67,8 @@ Create a `.formdt` file in your project root:
 - **Line wrapping**: Lines are wrapped at the configured length (default: 80)
 - **Single line breaks**: Joined within paragraphs (markdown treats them as spaces)
 - **Double line breaks**: Preserved as paragraph separators
+- **Links**: `[text](url)` patterns are kept intact and never broken across lines
+- **Preserved blocks**: Headings, lists, code fences, and math blocks (`$$`) are not modified
 
 ## Development
 
