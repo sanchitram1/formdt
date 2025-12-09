@@ -1,6 +1,7 @@
 # formdt
 
-A markdown formatter with configurable line length, supporting both `.md` files and Jupyter notebooks.
+A markdown formatter with configurable line length, supporting
+both `.md` files and Jupyter notebooks.
 
 ## Commands
 
