@@ -1,4 +1,7 @@
+import re
 from .config import Config
+
+LINK_PATTERN = re.compile(r'\[([^\]]*)\]\(([^)]+)\)')
 
 
 def format_markdown(text: str, config: Config | None = None) -> str:
@@ -16,30 +19,50 @@ def format_markdown(text: str, config: Config | None = None) -> str:
 
 def _wrap_paragraph(paragraph: str, line_length: int) -> str:
     lines = paragraph.split("\n")
-    words = " ".join(lines).split()
+    combined = " ".join(lines)
     
-    if not words:
+    if not combined.strip():
         return ""
+    
+    tokens = _tokenize_with_links(combined)
     
     wrapped_lines = []
     current_line = []
     current_length = 0
     
-    for word in words:
-        word_length = len(word)
+    for token in tokens:
+        token_length = len(token)
         
         if current_length == 0:
-            current_line.append(word)
-            current_length = word_length
-        elif current_length + 1 + word_length <= line_length:
-            current_line.append(word)
-            current_length += 1 + word_length
+            current_line.append(token)
+            current_length = token_length
+        elif current_length + 1 + token_length <= line_length:
+            current_line.append(token)
+            current_length += 1 + token_length
         else:
             wrapped_lines.append(" ".join(current_line))
-            current_line = [word]
-            current_length = word_length
+            current_line = [token]
+            current_length = token_length
     
     if current_line:
         wrapped_lines.append(" ".join(current_line))
     
     return "\n".join(wrapped_lines)
+
+
+def _tokenize_with_links(text: str) -> list[str]:
+    tokens = []
+    last_end = 0
+    
+    for match in LINK_PATTERN.finditer(text):
+        before = text[last_end:match.start()]
+        if before:
+            tokens.extend(before.split())
+        tokens.append(match.group(0))
+        last_end = match.end()
+    
+    after = text[last_end:]
+    if after:
+        tokens.extend(after.split())
+    
+    return tokens

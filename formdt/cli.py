@@ -4,6 +4,19 @@ from pathlib import Path
 
 from .config import load_config
 from .formatter import format_markdown
+from .notebook import format_notebook, write_notebook
+
+
+def parse_cells(value: str) -> list[int]:
+    cells = []
+    for part in value.split(","):
+        part = part.strip()
+        if "-" in part:
+            start, end = part.split("-", 1)
+            cells.extend(range(int(start), int(end) + 1))
+        else:
+            cells.append(int(part))
+    return cells
 
 
 def main() -> int:
@@ -11,7 +24,7 @@ def main() -> int:
         prog="formdt",
         description="Format markdown files with configurable line length"
     )
-    parser.add_argument("file", type=Path, help="Markdown file to format")
+    parser.add_argument("file", type=Path, help="Markdown or Jupyter notebook file to format")
     parser.add_argument(
         "-l", "--line-length",
         type=int,
@@ -21,6 +34,16 @@ def main() -> int:
         "-w", "--write",
         action="store_true",
         help="Write changes back to file (default: print to stdout)"
+    )
+    parser.add_argument(
+        "-c", "--cells",
+        type=str,
+        help="Cell indices to format (e.g., '0,2,5' or '1-3,7'). Notebook only."
+    )
+    parser.add_argument(
+        "-m", "--markdown",
+        action="store_true",
+        help="Format all markdown cells. Notebook only."
     )
     
     args = parser.parse_args()
@@ -33,13 +56,23 @@ def main() -> int:
         print(f"Error: File not found: {args.file}", file=sys.stderr)
         return 1
     
-    content = args.file.read_text()
-    formatted = format_markdown(content, config)
-    
-    if args.write:
-        args.file.write_text(formatted)
+    if args.file.suffix == ".ipynb":
+        cells = parse_cells(args.cells) if args.cells else None
+        notebook = format_notebook(args.file, config, cells=cells, all_markdown=args.markdown)
+        
+        if args.write:
+            write_notebook(notebook, args.file)
+        else:
+            import json
+            print(json.dumps(notebook, indent=1, ensure_ascii=False))
     else:
-        print(formatted)
+        content = args.file.read_text()
+        formatted = format_markdown(content, config)
+        
+        if args.write:
+            args.file.write_text(formatted)
+        else:
+            print(formatted)
     
     return 0
 
