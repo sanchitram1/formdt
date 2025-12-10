@@ -104,3 +104,21 @@ class TestCallouts:
         lines = result.split("\n")
         for line in lines:
             assert line.startswith(">>")
+
+    def test_github_admonition_stays_on_own_line(self):
+        config = Config(line_length=80)
+        text = "> [!note]\n> You must specify either `-m` (all markdown cells) or `-c` (specific cells) when formatting notebooks."
+        result = format_markdown(text, config)
+
+        lines = result.split("\n")
+        assert lines[0] == "> [!note]"
+        assert all(line.startswith(">") for line in lines)
+
+    def test_github_admonition_with_text_on_same_line(self):
+        config = Config(line_length=80)
+        text = "> [!warning] This is a warning that should stay on its own line.\n> More content here."
+        result = format_markdown(text, config)
+
+        lines = result.split("\n")
+        assert lines[0].startswith("> [!warning]")
+        assert "[!warning]" not in lines[1]

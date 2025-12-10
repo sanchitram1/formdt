@@ -25,8 +25,9 @@ formdt README.md --line-length 120
 
 ### Jupyter Notebooks
 
-> [!note] You must specify either `-m` (all markdown cells) or
-> `-c` (specific cells) when formatting notebooks.
+> [!note] 
+> You must specify either `-m` (all markdown cells) or `-c`
+> (specific cells) when formatting notebooks.
 
 ```bash
 # Format all markdown cells

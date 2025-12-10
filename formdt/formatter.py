@@ -8,6 +8,7 @@ HEADING_PATTERN = re.compile(r"^#{1,6}\s")
 CODE_FENCE_PATTERN = re.compile(r"^```")
 MATH_BLOCK_PATTERN = re.compile(r"^\$\$")
 CALLOUT_PATTERN = re.compile(r"^(>+)\s?")
+ADMONITION_PATTERN = re.compile(r"^(>+)\s*\[!(\w+)\]")
 
 
 def format_markdown(text: str, config: Config | None = None) -> str:
@@ -48,6 +49,12 @@ def format_markdown(text: str, config: Config | None = None) -> str:
             or LIST_PATTERN.match(line)
             or line.strip() == ""
         ):
+            result.append(line)
+            i += 1
+            continue
+
+        admonition_match = ADMONITION_PATTERN.match(line)
+        if admonition_match:
             result.append(line)
             i += 1
             continue
