@@ -9,6 +9,12 @@ both `.md` files and Jupyter notebooks.
 # Run tests
 uv run pytest -v
 
+# Format code (required before committing)
+uv run ruff format .
+
+# Lint code (required before committing)
+uv run ruff check . --fix
+
 # Build package
 uv build
 
