@@ -66,11 +66,15 @@ Create a `.formdt` file in your project root:
 
 ## Rules
 
-- **Line wrapping**: Lines are wrapped at the configured length (default: 80)
-- **Single line breaks**: Joined within paragraphs (markdown treats them as spaces)
+- **Line wrapping**: Lines are wrapped at the configured length
+  (default: 80)
+- **Single line breaks**: Joined within paragraphs (markdown
+  treats them as spaces)
 - **Double line breaks**: Preserved as paragraph separators
-- **Links**: `[text](url)` patterns are kept intact and never broken across lines
-- **Preserved blocks**: Headings, lists, code fences, and math blocks (`$$`) are not modified
+- **Links**: ` [text](url) ` patterns are kept intact and never
+  broken across lines
+- **Preserved blocks**: Headings, lists, code fences, and math
+  blocks (`$$`) are not modified
 
 ## Development
 
