@@ -75,3 +75,32 @@ class TestLineWrapping:
         result = format_markdown(text)
 
         assert result == "Short text"
+
+
+class TestCallouts:
+    def test_wraps_callout_with_prefix_on_continuation_lines(self):
+        config = Config(line_length=40)
+        text = "> You must specify either `-m` (all markdown cells) or `-c` (specific cells) when formatting notebooks."
+        result = format_markdown(text, config)
+
+        lines = result.split("\n")
+        assert len(lines) > 1
+        for line in lines:
+            assert line.startswith(">")
+            assert len(line) <= 40
+
+    def test_preserves_short_callout(self):
+        config = Config(line_length=80)
+        text = "> Short callout."
+        result = format_markdown(text, config)
+
+        assert result == "> Short callout."
+
+    def test_nested_callout_prefix_preserved(self):
+        config = Config(line_length=30)
+        text = ">> This is a nested callout that should wrap properly."
+        result = format_markdown(text, config)
+
+        lines = result.split("\n")
+        for line in lines:
+            assert line.startswith(">>")

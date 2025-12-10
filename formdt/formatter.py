@@ -7,6 +7,7 @@ LIST_PATTERN = re.compile(r"^(\s*)([-*+]|\d+\.)\s")
 HEADING_PATTERN = re.compile(r"^#{1,6}\s")
 CODE_FENCE_PATTERN = re.compile(r"^```")
 MATH_BLOCK_PATTERN = re.compile(r"^\$\$")
+CALLOUT_PATTERN = re.compile(r"^(>+)\s?")
 
 
 def format_markdown(text: str, config: Config | None = None) -> str:
@@ -51,6 +52,12 @@ def format_markdown(text: str, config: Config | None = None) -> str:
             i += 1
             continue
 
+        callout_match = CALLOUT_PATTERN.match(line)
+        callout_prefix = ""
+        if callout_match:
+            callout_prefix = callout_match.group(1) + " "
+            line = line[callout_match.end() :]
+
         para_lines = [line]
         i += 1
         while i < len(lines):
@@ -63,11 +70,19 @@ def format_markdown(text: str, config: Config | None = None) -> str:
                 or MATH_BLOCK_PATTERN.match(next_line.strip())
             ):
                 break
+            if callout_prefix and CALLOUT_PATTERN.match(next_line):
+                next_callout = CALLOUT_PATTERN.match(next_line)
+                next_line = next_line[next_callout.end() :]
             para_lines.append(next_line)
             i += 1
 
         paragraph = " ".join(para_lines)
-        wrapped = _wrap_paragraph(paragraph, config.line_length)
+        effective_length = config.line_length - len(callout_prefix)
+        wrapped = _wrap_paragraph(paragraph, effective_length)
+        if callout_prefix:
+            wrapped = "\n".join(
+                callout_prefix + wrapped_line for wrapped_line in wrapped.split("\n")
+            )
         result.append(wrapped)
 
     return "\n".join(result)

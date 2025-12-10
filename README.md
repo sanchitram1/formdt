@@ -25,6 +25,9 @@ formdt README.md --line-length 120
 
 ### Jupyter Notebooks
 
+> [!note] You must specify either `-m` (all markdown cells) or
+> `-c` (specific cells) when formatting notebooks.
+
 ```bash
 # Format all markdown cells
 formdt notebook.ipynb -m -w
@@ -38,8 +41,6 @@ formdt notebook.ipynb -c "1-3,7" -w
 # Preview without writing
 formdt notebook.ipynb -m -l 65
 ```
-
-**Note:** You must specify either `-m` (all markdown cells) or `-c` (specific cells) when formatting notebooks.
 
 ### Library
 
