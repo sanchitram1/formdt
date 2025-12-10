@@ -44,12 +44,22 @@ def format_markdown(text: str, config: Config | None = None) -> str:
                 i += 1
             continue
 
-        if (
-            HEADING_PATTERN.match(line)
-            or LIST_PATTERN.match(line)
-            or line.strip() == ""
-        ):
+        if HEADING_PATTERN.match(line) or line.strip() == "":
             result.append(line)
+            i += 1
+            continue
+
+        list_match = LIST_PATTERN.match(line)
+        if list_match:
+            list_prefix = list_match.group(0)
+            indent = " " * len(list_prefix)
+            content = line[list_match.end() :]
+            effective_length = config.line_length - len(indent)
+            wrapped = _wrap_paragraph(content, effective_length)
+            wrapped_lines = wrapped.split("\n")
+            result.append(list_prefix + wrapped_lines[0])
+            for wrapped_line in wrapped_lines[1:]:
+                result.append(indent + wrapped_line)
             i += 1
             continue
 

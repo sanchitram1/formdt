@@ -122,3 +122,48 @@ class TestCallouts:
         lines = result.split("\n")
         assert lines[0].startswith("> [!warning]")
         assert "[!warning]" not in lines[1]
+
+
+class TestLists:
+    def test_bullet_continuation_indented_to_content_start(self):
+        config = Config(line_length=50)
+        text = "- **Line wrapping**: Lines are wrapped at the configured length (default: 80)"
+        result = format_markdown(text, config)
+
+        lines = result.split("\n")
+        assert len(lines) > 1
+        assert lines[0].startswith("- ")
+        assert lines[1].startswith("  ")
+        assert not lines[1].startswith("   ")
+        for line in lines:
+            assert len(line) <= 50
+
+    def test_numbered_list_continuation_indented(self):
+        config = Config(line_length=40)
+        text = (
+            "1. This is a numbered list item that should wrap with proper indentation."
+        )
+        result = format_markdown(text, config)
+
+        lines = result.split("\n")
+        assert len(lines) > 1
+        assert lines[0].startswith("1. ")
+        assert lines[1].startswith("   ")
+        assert not lines[1].startswith("    ")
+
+    def test_nested_bullet_continuation_indented(self):
+        config = Config(line_length=40)
+        text = "  - This is a nested bullet that should wrap with proper indentation."
+        result = format_markdown(text, config)
+
+        lines = result.split("\n")
+        assert len(lines) > 1
+        assert lines[0].startswith("  - ")
+        assert lines[1].startswith("    ")
+
+    def test_short_bullet_not_wrapped(self):
+        config = Config(line_length=80)
+        text = "- Short item"
+        result = format_markdown(text, config)
+
+        assert result == "- Short item"
