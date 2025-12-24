@@ -1,5 +1,10 @@
 # formdt
 
+[![CI](https://github.com/sanchitram1/formdt/actions/workflows/ci.yml/badge.svg)
+](https://github.com/sanchitram1/formdt/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/sanchitram1/formdt/badge.svg?branch=admin)
+](https://coveralls.io/github/sanchitram1/formdt?branch=admin)
+
 Markdown formatter with configurable line length.
 
 ## Installation
@@ -67,14 +72,14 @@ Create a `.formdt` file in your project root:
 ## Rules
 
 - **Line wrapping**: Lines are wrapped at the configured length
-  (default: 80)
+(default: 80)
 - **Single line breaks**: Joined within paragraphs (markdown
-  treats them as spaces)
+treats them as spaces)
 - **Double line breaks**: Preserved as paragraph separators
 - **Links**: ` [text](url) ` patterns are kept intact and never
-  broken across lines
+broken across lines
 - **Preserved blocks**: Headings, lists, code fences, and math
-  blocks (`$$`) are not modified
+blocks (`$$`) are not modified
 
 ## Development
 
@@ -92,4 +97,16 @@ uv run pytest
 
 ```bash
 pytest
+```
+
+### sync
+
+```bash
+uv sync
+```
+
+### cov
+
+```bash
+uv run coveralls
 ```
