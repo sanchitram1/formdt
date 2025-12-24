@@ -146,12 +146,12 @@ def _tokenize_with_links(text: str) -> list[str]:
         patterns.append((match.start(), match.end(), match.group(0)))
     for match in INLINE_MATH_PATTERN.finditer(text):
         patterns.append((match.start(), match.end(), match.group(0)))
-    
+
     # Sort by start position
     patterns.sort(key=lambda x: x[0])
-    
+
     for start, end, matched_text in patterns:
-        before = text[last_end : start]
+        before = text[last_end:start]
         if before:
             tokens.extend(before.split())
         tokens.append(matched_text)

@@ -198,6 +198,6 @@ class TestMathBlocks:
                 if opening_line is None:
                     opening_line = i
                 closing_line = i
-        
+
         # Both $$ should be on the same line (opening and closing)
         assert opening_line == closing_line, "Display math block was split across lines"
