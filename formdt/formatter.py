@@ -3,6 +3,7 @@ import re
 from .config import Config
 
 LINK_PATTERN = re.compile(r"\[([^\]]*)\]\(([^)]+)\)")
+INLINE_MATH_PATTERN = re.compile(r"\$\$[^\$]+\$\$")
 LIST_PATTERN = re.compile(r"^(\s*)([-*+]|\d+\.)\s")
 HEADING_PATTERN = re.compile(r"^#{1,6}\s")
 CODE_FENCE_PATTERN = re.compile(r"^```")
@@ -139,12 +140,22 @@ def _tokenize_with_links(text: str) -> list[str]:
     tokens = []
     last_end = 0
 
+    # Find all special patterns (links and inline math)
+    patterns = []
     for match in LINK_PATTERN.finditer(text):
-        before = text[last_end : match.start()]
+        patterns.append((match.start(), match.end(), match.group(0)))
+    for match in INLINE_MATH_PATTERN.finditer(text):
+        patterns.append((match.start(), match.end(), match.group(0)))
+    
+    # Sort by start position
+    patterns.sort(key=lambda x: x[0])
+    
+    for start, end, matched_text in patterns:
+        before = text[last_end : start]
         if before:
             tokens.extend(before.split())
-        tokens.append(match.group(0))
-        last_end = match.end()
+        tokens.append(matched_text)
+        last_end = end
 
     after = text[last_end:]
     if after:

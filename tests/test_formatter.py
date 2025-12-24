@@ -167,3 +167,37 @@ class TestLists:
         result = format_markdown(text, config)
 
         assert result == "- Short item"
+
+
+class TestMathBlocks:
+    def test_preserves_display_math_blocks(self):
+        config = Config(line_length=80)
+        text = "$$ \\mathbb{E}[C_t \\mid N_t = n] = \\sum_{i=1}^n \\mathbb{E}[J_i] = n\\mu $$\n\nThus, $\\mathbb{E}[C_t \\mid N_t] = N_t \\mu$."
+        result = format_markdown(text, config)
+
+        assert "$$ \\mathbb{E}[C_t \\mid N_t = n]" in result
+        assert "= n\\mu $$" in result
+
+    def test_preserves_inline_display_math_with_text(self):
+        config = Config(line_length=40)
+        text = "Some text before. $$ \\mathbb{E}[C_t \\mid N_t = n] = \\sum_{i=1}^n \\mathbb{E}[J_i] = n\\mu $$ Some text after."
+        result = format_markdown(text, config)
+
+        # Math block should not be split across lines
+        # The complete $$ ... $$ should be an unbroken token
+        assert "$$" in result
+        # Count occurrences - should be exactly 2 (opening and closing)
+        assert result.count("$$") == 2
+        # The opening and closing should be on the same line or at least the math content
+        # shouldn't have $$ split across different lines
+        lines = result.split("\n")
+        opening_line = None
+        closing_line = None
+        for i, line in enumerate(lines):
+            if "$$" in line:
+                if opening_line is None:
+                    opening_line = i
+                closing_line = i
+        
+        # Both $$ should be on the same line (opening and closing)
+        assert opening_line == closing_line, "Display math block was split across lines"
