@@ -85,3 +85,11 @@ uv sync
 # Run tests
 uv run pytest
 ```
+
+## Tasks
+
+### test
+
+```bash
+pytest
+```

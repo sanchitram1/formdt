@@ -15,7 +15,27 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
-    "coverall>=1.0.5",
+    "coveralls>=4.0.2",
     "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
     "ruff>=0.14.10",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+minversion = "9.0"
+addopts = ["-ra", "-q", "--cov", "--cov-report=term-missing"]
+python_files = ["test_*.py", "*_test.py"]
+
+[tool.coverage.run]
+source = [
+    "."
+]
+omit = [
+    "*/__init__.py",
+    "tests/*.py"
+]
+
+[tool.coverage.report]
+show_missing = true
