@@ -2,7 +2,7 @@ import re
 
 from .config import Config
 
-LINK_PATTERN = re.compile(r"\[([^\]]*)\]\(([^)]+)\)")
+LINK_PATTERN = re.compile(r"!?\[([^\]]*)\]\(([^)]+)\)")
 INLINE_MATH_PATTERN = re.compile(r"\$\$[^\$]+\$\$")
 LIST_PATTERN = re.compile(r"^(\s*)([-*+]|\d+\.)\s")
 HEADING_PATTERN = re.compile(r"^#{1,6}\s")

@@ -32,10 +32,18 @@ uv run formdt <file> [options]
 
 ## Key Conventions
 
-- Links `[text](url)` are treated as atomic tokens and never broken across lines
+- Links `[text](url)` and images `![alt](url)` are treated as atomic tokens and never broken across lines
 - Default line length is 80 characters
 - Config file is `.formdt` in working directory with `line_length = N` format
 - Notebooks use 0-indexed cell numbers
+
+## Development Approach
+
+We follow test-driven development (TDD):
+1. Write a test that catches the specific functionality or bug we want to fix
+2. Verify the test fails (to confirm we're actually catching the issue)
+3. Implement the fix to make the test pass
+4. Ensure all existing tests still pass
 
 ## Release Process
 

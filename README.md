@@ -31,8 +31,8 @@ formdt README.md --line-length 120
 ### Jupyter Notebooks
 
 > [!note] 
-> You must specify either `-m` (all markdown cells) or `-c`
-> (specific cells) when formatting notebooks.
+> You must specify either `-m` (all markdown cells) or `-c` (specific cells) when
+> formatting notebooks.
 
 ```bash
 # Format all markdown cells
@@ -72,14 +72,12 @@ Create a `.formdt` file in your project root:
 ## Rules
 
 - **Line wrapping**: Lines are wrapped at the configured length
-(default: 80)
-- **Single line breaks**: Joined within paragraphs (markdown
-treats them as spaces)
+- **Single line breaks**: Joined within paragraphs
 - **Double line breaks**: Preserved as paragraph separators
-- **Links**: ` [text](url) ` patterns are kept intact and never
-broken across lines
-- **Preserved blocks**: Headings, lists, code fences, and math
-blocks (`$$`) are not modified
+- **Links**: ` [text](url) ` patterns are kept intact and never broken across lines
+  - **Previews**: Previews are also kept intact and never broken across lines
+- **Preserved blocks**: Headings, lists, code fences, and math blocks (`$$`) are not
+  modified
 
 ## Development
 
@@ -102,7 +100,8 @@ pytest
 ### sync
 
 ```bash
-uv sync
+uv sync --all-extras
+uv pip install -e .
 ```
 
 ### cov
