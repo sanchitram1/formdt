@@ -1,7 +1,7 @@
 [project]
 name = "formdt"
-version = "0.5.0"
-description = "Markdown formatter with configurable line length"
+version = "0.6.0"
+description = "An opinionated markdown formatter"
 readme = "README.md"
 requires-python = ">=3.13"
 

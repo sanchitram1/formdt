@@ -201,3 +201,27 @@ class TestMathBlocks:
 
         # Both $$ should be on the same line (opening and closing)
         assert opening_line == closing_line, "Display math block was split across lines"
+
+
+class TestImageMarkdown:
+    def test_image_markdown_not_split_across_lines(self):
+        config = Config(line_length=88)
+        text = "![Tests Passing](https://github.com/sanchitram1/pyspam/actions/workflows/ci.yml/badge.svg)"
+        result = format_markdown(text, config)
+
+        # Image markdown should not be split - the ! should not be on its own line
+        lines = result.split("\n")
+        assert len(lines) == 1
+        assert result == text
+
+    def test_image_markdown_with_surrounding_text(self):
+        config = Config(line_length=50)
+        text = "See this ![alt](https://example.com/image.png) for details."
+        result = format_markdown(text, config)
+
+        # Image markdown should be kept as atomic token
+        assert "![alt](https://example.com/image.png)" in result
+        # Verify ! is not on its own line
+        lines = result.split("\n")
+        for line in lines:
+            assert line != "!"
